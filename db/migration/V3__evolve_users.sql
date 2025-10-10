@@ -15,5 +15,5 @@ ALTER TABLE public.users ADD CONSTRAINT users_email_status_unique UNIQUE (email,
 
 CREATE UNIQUE INDEX idx_users_active_email ON public.users USING btree (email, status) WHERE status <> 'inactive';
 
-CREATE UNIQUE INDEX idx_users_lower_email ON public.users (LOWER(email));
+CREATE INDEX idx_users_lower_email ON public.users (LOWER(email));
 

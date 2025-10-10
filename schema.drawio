@@ -110,7 +110,7 @@
           <mxGeometry x="30" width="310.00" height="30.00" as="geometry" />
           <mxRectangle width="310.00" height="30.00" as="alternateBounds" />
         </mxCell>
-        <mxCell id="mx31" value="PK: (ID)&lt;br/&gt;UNIQUE (EMAIL)&lt;br/&gt;USERS_EMAIL_STATUS_UNIQUE: UNIQUE (EMAIL, STATUS)&lt;br/&gt;IDX_USERS_ACTIVE_EMAIL: UNIQUE BTREE (EMAIL, STATUS) WHERE status &amp;lt;&amp;gt; 'inactive'&lt;br/&gt;IDX_USERS_LOWER_EMAIL: UNIQUE EXPRESSION (LOWER(email))" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="mx31" value="PK: (ID)&lt;br/&gt;Unique Index on [EMAIL]&lt;br/&gt;Unique Index on [EMAIL, STATUS]&lt;br/&gt;Unique Index on [EMAIL, STATUS] where status &amp;lt;&amp;gt; 'inactive'&lt;br/&gt;Index on [LOWER(email)]" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="360.00" y="520.00" width="340.00" height="80.00" as="geometry" />
         </mxCell>
         <mxCell id="mx32" value="PUBLIC.ORDER_ITEMS" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;labelBackgroundColor=none;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
@@ -162,8 +162,8 @@
           <mxGeometry x="30" width="310.00" height="30.00" as="geometry" />
           <mxRectangle width="310.00" height="30.00" as="alternateBounds" />
         </mxCell>
-        <mxCell id="mx45" value="PK: (ORDER_ID, PRODUCT_ID)&lt;br/&gt;IDX_ORDER_ITEMS_PRODUCT_PARTIAL: UNIQUE (PRODUCT_ID) WHERE quantity &amp;gt; 1" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="120.00" y="882.00" width="340.00" height="32.00" as="geometry" />
+        <mxCell id="mx45" value="PK: (ORDER_ID, PRODUCT_ID)&lt;br/&gt;FK ORDER_ID -&amp;gt; PUBLIC.PURCHASE_ORDERS.ID&lt;br/&gt;Unique Index on [PRODUCT_ID] where quantity &amp;gt; 1" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="120.00" y="882.00" width="340.00" height="48.00" as="geometry" />
         </mxCell>
         <mxCell id="mx46" value="PURCHASE_ORDERS" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;labelBackgroundColor=none;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="600.00" y="720.00" width="340.00" height="180.00" as="geometry">
@@ -225,8 +225,8 @@
           <mxGeometry x="30" width="310.00" height="30.00" as="geometry" />
           <mxRectangle width="310.00" height="30.00" as="alternateBounds" />
         </mxCell>
-        <mxCell id="mx62" value="PK: (ID)" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="600.00" y="912.00" width="340.00" height="16.00" as="geometry" />
+        <mxCell id="mx62" value="PK: (ID)&lt;br/&gt;FK USER_ID -&amp;gt; PUBLIC.USERS.ID" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600.00" y="912.00" width="340.00" height="32.00" as="geometry" />
         </mxCell>
         <mxCell id="mx63" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeColor=#999999;" edge="1" parent="1" source="mx32" target="mx14">
           <mxGeometry relative="1" as="geometry" />
