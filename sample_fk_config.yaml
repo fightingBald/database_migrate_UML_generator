@@ -1,0 +1,9 @@
+users:
+  fks:
+    - [role_id, roles, id]
+    - [manager_id, users, id]
+
+order_items:
+  fks:
+    - [order_id, purchase_orders, id]
+    - [product_id, products, id]
