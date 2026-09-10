@@ -8,6 +8,7 @@ Date: 2026-09-10. The results below record local implementation checks.
 - Old draw.io entrypoints and Python exports remain available. D2 does not import NetworkX or the draw.io layout/exporter.
 - SQL/FK loading returns per-run diagnostics; the historical last-run API remains available separately.
 - D2 source generation validates relationships, quotes data, sorts output deterministically and leaves the input Schema unchanged.
+- D2 defaults to a clean blue-grey style with light row separators, teal key markers and muted connections; `--style classic` restores the original appearance. Native palette/settings are embedded in the source.
 - Rendering requires D2 0.7.1/bundled ELK, bounds execution time and publishes only a verified SVG. Failed rendering preserves the previous SVG and returns nonzero.
 - D2 self references include field labels. The renderer uses self-loop spacing 100; this improves simple loops but does not prevent all composite-loop label collisions.
 - DROP table/column/constraint/index compatibility, schema-qualified index operations, DROP COLUMN CASCADE, complete removal of affected primary-key constraints, numeric migration ordering, ambiguous YAML references and detected parse-error line reporting have regression coverage.
@@ -23,10 +24,10 @@ Environment: macOS, Python 3.14.0, sqlglot 30.18.0, NetworkX 3.6.1, PyYAML 6.0.3
 | Check | Result |
 | --- | --- |
 | `make build` | Pass |
-| `make test` | 110 passed; 4 integration tests deselected by design |
-| `make test-integration` | 4 passed; D2 is required, not silently skipped |
+| `make test` | 117 passed; 6 integration tests deselected by design |
+| `make test-integration` | 6 passed; D2 is required, not silently skipped |
 | `make lint` | Ruff checks and scoped formatting pass |
-| `make run` | D2 + SVG generated successfully; last measured render 0.648 s |
+| `make run` | D2 + SVG generated successfully; last measured render 0.605 s |
 | Sample schema | 5 tables, 21 columns, 5 FKs, 7 index/unique records |
 | Legacy tools | draw.io export, relationship extraction, comparator and documented Graphviz fallback exercised |
 | Browser inspection | Sample table/column labels, ordinary FK row connections, labeled self-loop, composite FK pair labels and cyclic connections inspected in Chrome |
@@ -35,6 +36,10 @@ Environment: macOS, Python 3.14.0, sqlglot 30.18.0, NetworkX 3.6.1, PyYAML 6.0.3
 Test coverage includes malformed SQL and YAML, source/target references, explicit/implicit composite FK boundaries, source immutability, deterministic ordering, reserved D2 words, literal substitutions, Unicode, executable/version/layout failures, timeouts, invalid SVGs, write failures and preservation of existing artifacts.
 
 The tiny D2 golden fixture was written from explicit expected schema behavior. Schema correctness tests assert migration outcomes instead of merely comparing two renderers that share the same parser.
+
+Both visual presets compile with the pinned D2 renderer. The classic preset still matches the original golden source, and the clean preset verifies actual SVG header/text/key/connection colours. Unicode and reserved/literal identifiers are rendered with both presets and the appendix. Style selection is rejected for draw.io. Column definitions and relationship endpoints are checked for equivalence, and generation leaves the Schema unchanged.
+
+Tables retain square corners: during styling validation, D2 0.7.1 produced invalid SVG for rounded SQL tables with quoted qualified names. Native rounding is applied only to connections.
 
 ## Synthetic scale measurements
 
