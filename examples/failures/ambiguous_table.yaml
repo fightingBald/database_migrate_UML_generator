@@ -1,0 +1,3 @@
+support.tickets:
+  fks:
+    - [assignee_id, users, id] # Could mean auth.users or crm.users.

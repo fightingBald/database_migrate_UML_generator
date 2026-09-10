@@ -1,0 +1,16 @@
+# Generated from migrations; edit SQL or FK configuration, then regenerate.
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+direction: right
+
+"public.users": {
+  shape: sql_table
+  "id": "INT" {constraint: primary_key}
+  "manager_id": "INT" {constraint: foreign_key}
+  tooltip: "PK: (id)\nFK: (manager_id) -> public.users (id)"
+}
+
+"public.users"."manager_id" -> "public.users"."id": "manager_id → id"

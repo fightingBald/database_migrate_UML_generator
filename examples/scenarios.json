@@ -1,0 +1,79 @@
+{
+  "success": [
+    {
+      "id": "tenant_orders",
+      "title": "多租户订单与权限",
+      "description": "9 张表，15 个外键约束、26 条字段连线；复合键、审批角色、多对多、组织与分类自引用。",
+      "visual_note": "布局压力案例：D2 0.7.1 / ELK 对复合自引用及多边汇聚存在局部标签重叠。字段关系核验通过，但本图未通过无重叠的视觉验收。",
+      "migrations": "examples/tenant_orders/migrations",
+      "args": ["--show-types", "--direction", "right"],
+      "tables": ["accounts.tenants", "accounts.users", "accounts.roles", "accounts.user_roles", "catalog.categories", "catalog.products", "sales.orders", "sales.order_items", "billing.payments"],
+      "labels": ["fk_order_product [1/2]", "fk_order_product [2/2]", "fk_user_manager [2/2]: manager_id → id"]
+    },
+    {
+      "id": "release_evolution",
+      "title": "五个版本的结构演进",
+      "description": "V1 → V2 → V3 → V10 → V11；表和字段重命名、外键跟随、级联删除、索引维护；最终只剩 4 张表。",
+      "migrations": "examples/release_evolution/migrations",
+      "args": ["--show-types", "--direction", "down"],
+      "tables": ["app.customers", "app.orders", "app.order_lines", "audit.events"],
+      "labels": ["customer_id", "total_amount", "lifecycle_state"],
+      "absent_labels": ["app.accounts", "app.tmp_backfill", "legacy_code", "actor_id", "account_id", "grand_total", "status"]
+    },
+    {
+      "id": "logical_relationships",
+      "title": "跨系统逻辑关系",
+      "description": "同名 users 表、SQL／注释／YAML 三种关系来源与去重、双向依赖、自引用及无外键的 outbox。隐藏类型以突出关系。",
+      "migrations": "examples/logical_relationships/migrations",
+      "fk_config": "examples/logical_relationships/fks.yaml",
+      "args": ["--direction", "left"],
+      "tables": ["auth.users", "crm.users", "crm.accounts", "support.tickets", "integration.sync_jobs", "ops.outbox"],
+      "labels": ["parent_id → id", "previous_job_id → id"]
+    },
+    {
+      "id": "readability",
+      "title": "中文与长字段的可读性",
+      "description": "中文名称、长字段、D2 保留词、点号、引号、反斜杠、字面 ${reference}、空表；类型及附录一起展示。",
+      "migrations": "examples/readability/migrations",
+      "args": ["--show-types", "--direction", "up", "--force-appendix"],
+      "tables": ["报表.客户资料", "报表.monthly_customer_reconciliation_details", "报表.processing_attempts", "报表.empty_extension_point"],
+      "labels": ["客户编号", "客户名称", "shape", "a.b", "${reference}", "path\\segment", "quoted\"label", "outstanding_amount_in_original_transaction_currency"]
+    }
+  ],
+  "failure": [
+    {
+      "id": "ambiguous_table", "title": "同名表引用不明确",
+      "migrations": "examples/logical_relationships/migrations",
+      "fk_config": "examples/failures/ambiguous_table.yaml",
+      "exit_code": 1, "error": "ambiguous table 'users'"
+    },
+    {
+      "id": "stale_fk_column", "title": "重命名后 YAML 仍指向旧字段",
+      "migrations": "examples/release_evolution/migrations",
+      "fk_config": "examples/failures/stale_fk_column.yaml",
+      "exit_code": 1, "error": "unknown or ambiguous column 'audit.events.actor_id'"
+    },
+    {
+      "id": "implicit_composite", "title": "复合外键省略目标列",
+      "migrations": "examples/failures/implicit_composite",
+      "exit_code": 1, "error": "implicit composite"
+    },
+    {
+      "id": "malformed_sql", "title": "迁移 SQL 不完整",
+      "migrations": "examples/failures/malformed_sql",
+      "exit_code": 1, "error": "Parse error"
+    },
+    {
+      "id": "invalid_layout", "title": "D2 误用 draw.io 的 grid 参数",
+      "migrations": "examples/release_evolution/migrations",
+      "args": ["--layout", "grid"],
+      "exit_code": 2, "error": "D2 requires --layout elk"
+    },
+    {
+      "id": "missing_renderer", "title": "渲染器不存在，源码生成但旧图保留",
+      "migrations": "examples/release_evolution/migrations",
+      "args": ["--d2-binary", "/nonexistent/erd-demo-renderer"],
+      "exit_code": 1, "error": "D2 executable not found"
+    }
+  ]
+}

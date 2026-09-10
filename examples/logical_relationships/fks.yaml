@@ -1,0 +1,13 @@
+crm.users:
+  fks:
+    - [account_ref, crm.accounts, id]
+    - [external_auth_id, auth.users, id]
+support.tickets:
+  fks:
+    - [reporter_id, crm.users, id] # Duplicate of a comment: draw only once.
+    - [assignee_id, auth.users, id]
+    - [account_id, crm.accounts, id] # Duplicate of a native FK.
+    - [assignee_id, auth.users, id] # Duplicate YAML entry.
+sync_jobs: # This short name is unambiguous.
+  fks:
+    - [triggered_by, auth.users, id]
