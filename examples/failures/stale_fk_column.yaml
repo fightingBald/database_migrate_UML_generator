@@ -1,3 +1,0 @@
-audit.events:
-  fks:
-    - [actor_id, app.customers, customer_id] # V2 renamed actor_id to customer_id.

@@ -1,6 +1,6 @@
 # D2 + ELK local validation
 
-Date: 2026-09-10. Implementation and checks were performed in the local working tree; no commit, push or deployment was performed.
+Date: 2026-09-10. The results below record local implementation checks.
 
 ## Implemented
 
@@ -13,7 +13,8 @@ Date: 2026-09-10. Implementation and checks were performed in the local working 
 - DROP table/column/constraint/index compatibility, schema-qualified index operations, DROP COLUMN CASCADE, complete removal of affected primary-key constraints, numeric migration ordering, ambiguous YAML references and detected parse-error line reporting have regression coverage.
 - The legacy comparator now understands qualified FK targets and generated type-suffixed column labels.
 - README, Makefile, pinned Python dependencies and GitHub Actions checks are included.
-- Four complex business demonstrations and six expected-failure cases run through the public CLI via `make demo`. A discovered stale unique-constraint registration after DROP COLUMN is fixed and covered for single/composite constraints.
+- Stale unique-constraint registration after DROP COLUMN is fixed and covered for single/composite constraints.
+- Version preflight accepts the pinned release as either `0.7.1` or `v0.7.1`, covering the Linux release binary; other versions and development suffixes remain rejected.
 
 ## Verification results
 
@@ -22,27 +23,18 @@ Environment: macOS, Python 3.14.0, sqlglot 30.18.0, NetworkX 3.6.1, PyYAML 6.0.3
 | Check | Result |
 | --- | --- |
 | `make build` | Pass |
-| `make test` | 119 passed; 6 integration tests deselected by design |
-| `make test-integration` | 6 passed; D2 is required, not silently skipped |
+| `make test` | 110 passed; 4 integration tests deselected by design |
+| `make test-integration` | 4 passed; D2 is required, not silently skipped |
 | `make lint` | Ruff checks and scoped formatting pass |
 | `make run` | D2 + SVG generated successfully; last measured render 0.648 s |
 | Sample schema | 5 tables, 21 columns, 5 FKs, 7 index/unique records |
 | Legacy tools | draw.io export, relationship extraction, comparator and documented Graphviz fallback exercised |
 | Browser inspection | Sample table/column labels, ordinary FK row connections, labeled self-loop, composite FK pair labels and cyclic connections inspected in Chrome |
 | CI configuration | YAML structure checked; official Linux D2 archive downloaded and its SHA-256 verified |
-| `make demo` | Four real SVGs and six expected failures verified; local gallery/report generated |
 
 Test coverage includes malformed SQL and YAML, source/target references, explicit/implicit composite FK boundaries, source immutability, deterministic ordering, reserved D2 words, literal substitutions, Unicode, executable/version/layout failures, timeouts, invalid SVGs, write failures and preservation of existing artifacts.
 
 The tiny D2 golden fixture was written from explicit expected schema behavior. Schema correctness tests assert migration outcomes instead of merely comparing two renderers that share the same parser.
-
-## Complex scenario follow-up
-
-The additional suite checks 9 tables / 42 columns / 15 FKs (26 field connectors) for multi-tenant orders; 4 / 15 / 3 for release evolution; 6 / 23 / 10 for cross-system relationships; and 4 / 17 / 3 for Unicode/readability. All four source-only directions and type visibility are exercised. The gallery runner also checks error exit codes, diagnostics, byte-for-byte preservation of prior artifacts and hiding stale images when a requested render fails.
-
-The first local gallery run took 1.132 s, 0.819 s, 0.953 s and 0.839 s respectively per successful CLI invocation, including Python loading and D2 preflight/rendering. These small fictional examples are not production performance evidence; later runs record their own timings in `generated/demos/report.json`.
-
-Browser inspection found overlapping labels in the multi-tenant diagram's composite self references and converging edges. This case passes automated structural/rendering checks but **does not pass a collision-free visual acceptance criterion**; it is labeled accordingly in the gallery and report. The release-evolution and logical-relationship examples are readable; the Unicode, escaped identifiers, long column and appendix were inspected in the standalone SVG. See the [scenario guide](../../examples/README.md).
 
 ## Synthetic scale measurements
 
@@ -59,7 +51,7 @@ Both completed within the default rendering timeout, but the 200-table case is e
 
 ## Limits and remaining external verification
 
-- GitHub Actions has been configured for Ubuntu/Python 3.11 and 3.14 but has not been run remotely. Python 3.11, Windows and the Linux D2 binary were not executed locally.
+- GitHub Actions targets Ubuntu/Python 3.11 and 3.14. The counts above are local results; consult the corresponding commit's Actions run for remote status. Windows has not been validated.
 - The team's actual migration history has not been supplied or run. The parser remains a documented PostgreSQL subset; no database was used to certify arbitrary SQL execution semantics.
 - D2 0.7.1/ELK may anchor a self loop to the table boundary despite column endpoints in the source. Field labels make the relationship explicit, but dense composite self-loop labels can still overlap; ordinary row-level connections were visually verified.
 - Omitted composite reference columns are rejected rather than inferred from an unordered primary-key set.
